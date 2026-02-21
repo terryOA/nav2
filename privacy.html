@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私政策 - 书签导航</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
+</head>
+<body>
+    <!-- 导航栏（与主页面一致） -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="logo" data-i18n="nav.home">首页</a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="/" class="nav-link" data-i18n="nav.home">首页</a></li>
+                <li><a href="/privacy" class="nav-link" data-i18n="nav.privacy">隐私政策</a></li>
+                <li><a href="/terms" class="nav-link">服务条款</a></li>
+                <li><a href="/disclaimer" class="nav-link" data-i18n="nav.disclaimer">免责声明</a></li>
+            </ul>
+            <select id="language-select" class="lang-select" onchange="changeLang(this.value)">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+                <option value="ar">العربية</option>
+                <option value="ja">日本語</option>
+            </select>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+    
+    <!-- 隐私政策内容 -->
+    <main class="container legal-page">
+        <h1 class="legal-title" data-i18n="nav.privacy">隐私政策</h1>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">引言</h2>
+            <p class="legal-text">欢迎使用我们的书签导航服务。本隐私政策旨在帮助您了解我们如何收集、使用、存储和保护您的个人信息。</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">1. 信息收集范围</h2>
+            <p class="legal-text">我们收集的信息包括：</p>
+            <ul class="legal-text">
+                <li><strong>用户提交信息</strong>：当您提交网站书签时，我们收集网站名称、URL、描述、分类和可选Logo链接</li>
+                <li><strong>技术信息</strong>：IP地址、浏览器类型、设备信息、访问时间和页面浏览记录</li>
+                <li><strong>Cookies和本地存储</strong>：用于保存您的语言偏好和会话信息</li>
+                <li><strong>管理员信息</strong>：如果您是管理员，我们保存您的登录凭证用于身份验证</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">2. 信息使用方式</h2>
+            <p class="legal-text">我们使用您的信息用于：</p>
+            <ul class="legal-text">
+                <li>提供和改进书签导航服务</li>
+                <li>审核用户提交的书签内容</li>
+                <li>防止滥用和确保平台安全</li>
+                <li>分析使用情况以优化用户体验</li>
+                <li>与您沟通服务更新或政策变更</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">3. 数据存储与安全</h2>
+            <p class="legal-text">您的数据存储于：</p>
+            <ul class="legal-text">
+                <li><strong>Cloudflare D1数据库</strong>：存储书签数据和用户提交信息</li>
+                <li><strong>Cloudflare KV存储</strong>：存储会话数据和临时信息</li>
+                <li><strong>本地浏览器存储</strong>：保存您的个人偏好设置</li>
+            </ul>
+            <p class="legal-text">我们采取行业标准的安全措施保护您的数据，但无法保证绝对安全。</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">4. 数据共享与披露</h2>
+            <p class="legal-text">我们不会出售或出租您的个人信息。在以下情况下可能共享信息：</p>
+            <ul class="legal-text">
+                <li>法律要求或配合执法调查</li>
+                <li>保护我们的权利、财产或安全</li>
+                <li>服务提供商协助我们运营服务</li>
+                <li>用户提交的书签内容会公开显示</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">5. 您的权利</h2>
+            <p class="legal-text">您有权：</p>
+            <ul class="legal-text">
+                <li>访问我们持有的您的个人信息</li>
+                <li>更正不准确的信息</li>
+                <li>要求删除您的数据（某些数据因法律要求可能无法删除）</li>
+                <li>选择不接收非必要的通信</li>
+                <li>通过邮件联系我们行使您的权利</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">6. Cookies政策</h2>
+            <p class="legal-text">我们使用Cookies和类似技术：</p>
+            <ul class="legal-text">
+                <li><strong>必要Cookies</strong>：维护会话状态和用户认证</li>
+                <li><strong>偏好Cookies</strong>：记住您的语言选择和显示设置</li>
+                <li><strong>分析Cookies</strong>：了解用户如何使用我们的服务</li>
+            </ul>
+            <p class="legal-text">您可以通过浏览器设置管理或禁用Cookies，但可能影响部分功能。</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">7. 儿童隐私</h2>
+            <p class="legal-text">我们的服务不面向13岁以下儿童。如果我们发现收集了儿童个人信息，将尽快删除。</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">8. 国际数据传输</h2>
+            <p class="legal-text">作为Cloudflare全球网络的一部分，您的数据可能在不同国家处理。我们确保符合适用的数据保护法律。</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">9. 政策更新</h2>
+            <p class="legal-text">我们可能不时更新本隐私政策。重大变更将在网站上公告。继续使用服务视为接受更新后的政策。</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">10. 联系我们</h2>
+            <p class="legal-text">如果您对本隐私政策有任何疑问，请通过以下方式联系我们：</p>
+            <ul class="legal-text">
+                <li>邮箱：privacy@your-domain.com</li>
+                <li>在网站提交问题反馈</li>
+                <li>最后更新日期：<span id="currentDate"></span></li>
+            </ul>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            initLanguage();
+            // 设置当前日期
+            const now = new Date();
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN');
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

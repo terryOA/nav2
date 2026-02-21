@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免责声明 - 书签导航</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="logo" data-i18n="nav.home">首页</a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="/" class="nav-link" data-i18n="nav.home">首页</a></li>
+                <li><a href="/privacy" class="nav-link" data-i18n="nav.privacy">隐私政策</a></li>
+                <li><a href="/terms" class="nav-link">服务条款</a></li>
+                <li><a href="/disclaimer" class="nav-link" data-i18n="nav.disclaimer">免责声明</a></li>
+            </ul>
+            <select id="language-select" class="lang-select" onchange="changeLang(this.value)">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+                <option value="ar">العربية</option>
+                <option value="ja">日本語</option>
+            </select>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+    
+    <main class="container legal-page">
+        <h1 class="legal-title" data-i18n="nav.disclaimer">免责声明</h1>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">重要声明</h2>
+            <p class="legal-text">请仔细阅读本免责声明。使用"书签导航"服务即表示您理解并接受本声明的所有内容。</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">1. 第三方内容免责</h2>
+            <p class="legal-text">本平台仅提供网站链接导航服务：</p>
+            <ul class="legal-text">
+                <li>所有展示的网站链接指向第三方独立运营的网站</li>
+                <li>我们对第三方网站的内容、准确性、合法性、安全性不承担任何责任</li>
+                <li>点击外部链接离开本平台时，您需自行评估目标网站的风险</li>
+                <li>我们无法控制第三方网站的内容更新、变更或关闭</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">2. 用户提交内容免责</h2>
+            <p class="legal-text">平台内容来自用户提交：</p>
+            <ul class="legal-text">
+                <li>我们尽力审核所有提交内容，但无法保证100%准确或安全</li>
+                <li>不对用户提交信息的真实性、完整性负责</li>
+                <li>如果发现有害或侵权链接，请立即通过管理员渠道举报</li>
+                <li>用户对提交的内容承担全部责任</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">3. 服务可用性免责</h2>
+            <p class="legal-text">关于服务运行：</p>
+            <ul class="legal-text">
+                <li>我们尽力保持服务稳定，但不对服务中断、延迟或错误负责</li>
+                <li>可能因维护、升级或其他不可抗力因素暂停服务</li>
+                <li>不保证服务将不间断、及时、安全或无错误</li>
+                <li>使用本服务产生的任何技术问题或数据丢失，我们不承担责任</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">4. 信息安全免责</h2>
+            <p class="legal-text">尽管我们采取安全措施：</p>
+            <ul class="legal-text">
+                <li>互联网传输不可能100%安全，信息可能被拦截</li>
+                <li>我们无法保证数据的绝对安全</li>
+                <li>您需自行保护个人信息和账户安全</li>
+                <li>因黑客攻击、病毒传播等造成的损失，我们不承担责任</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">5. 财务与投资免责</h2>
+            <p class="legal-text">本平台不提供财务建议：</p>
+            <ul class="legal-text">
+                <li>任何金融、投资相关网站链接仅供参考，不作推荐</li>
+                <li>不保证这些网站信息的准确性或时效性</li>
+                <li>投资决策需自行研究并咨询专业人士</li>
+                <li>因投资造成的任何损失，我们不承担责任</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">6. 医疗与健康免责</h2>
+            <p class="legal-text">本平台不提供医疗建议：</p>
+            <ul class="legal-text">
+                <li>医疗健康类网站链接仅供参考，不能替代专业医疗建议</li>
+                <li>紧急情况请立即联系医疗机构</li>
+                <li>因依赖网站信息导致的健康问题，我们不承担责任</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">7. 法律责任声明</h2>
+            <p class="legal-text">在法律允许的最大范围内：</p>
+            <ul class="legal-text">
+                <li>我们免除所有明示或暗示的保证和责任</li>
+                <li>对直接、间接、偶然、特殊或后果性损害不承担责任</li>
+                <li>包括但不限于利润损失、数据丢失、业务中断等</li>
+                <li>责任总额不超过您使用本服务支付的金额（通常为零）</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">8. 用户责任</h2>
+            <p class="legal-text">您同意：</p>
+            <ul class="legal-text">
+                <li>自行承担使用本服务及相关链接的风险</li>
+                <li>对点击链接后的行为承担全部责任</li>
+                <li>如因使用本服务造成损失，您放弃对我们追索的权利</li>
+                <li>保护我们免于因您使用服务而导致的任何索赔或责任</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">9. 报告与处理</h2>
+            <p class="legal-text">如发现问题链接：</p>
+            <ul class="legal-text">
+                <li>请立即通过管理员渠道举报</li>
+                <li>提供链接URL和问题描述</li>
+                <li>我们将尽快审核并采取适当措施</li>
+                <li>但无法保证立即处理所有报告</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">10. 联系方式</h2>
+            <p class="legal-text">如有疑问或需要报告问题：</p>
+            <ul class="legal-text">
+                <li>使用网站上的"联系我们"功能</li>
+                <li>通过管理员渠道联系</li>
+                <li>紧急问题请直接联系相关法律部门</li>
+            </ul>
+            <p class="legal-text"><em>最后更新日期：<span id="currentDate"></span></em></p>
+        </div>
+        
+        <div class="legal-section warning-box">
+            <p class="legal-text"><strong>重要提示：</strong>使用本服务即表示您理解并同意，点击任何外部链接都需自行判断风险。我们强烈建议您使用最新的安全软件，并谨慎处理个人信息。</p>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            initLanguage();
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN');
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

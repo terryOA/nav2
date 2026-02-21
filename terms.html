@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务条款 - 书签导航</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
+</head>
+<body>
+    <!-- 相同的导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="logo" data-i18n="nav.home">首页</a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="/" class="nav-link" data-i18n="nav.home">首页</a></li>
+                <li><a href="/privacy" class="nav-link" data-i18n="nav.privacy">隐私政策</a></li>
+                <li><a href="/terms" class="nav-link">服务条款</a></li>
+                <li><a href="/disclaimer" class="nav-link" data-i18n="nav.disclaimer">免责声明</a></li>
+            </ul>
+            <select id="language-select" class="lang-select" onchange="changeLang(this.value)">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+                <option value="ar">العربية</option>
+                <option value="ja">日本語</option>
+            </select>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+    
+    <main class="container legal-page">
+        <h1 class="legal-title">服务条款</h1>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">一、接受条款</h2>
+            <p class="legal-text">访问或使用"书签导航"服务（以下简称"本服务"），即表示您同意遵守本服务条款的所有内容。如果您不同意这些条款，请勿使用本服务。</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">二、服务描述</h2>
+            <p class="legal-text">本服务是一个书签导航平台，允许用户：</p>
+            <ul class="legal-text">
+                <li>浏览他人分享的优质网站链接</li>
+                <li>提交自己发现的优质网站（需管理员审核）</li>
+                <li>按分类筛选和搜索感兴趣的内容</li>
+                <li>使用多语言界面</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">三、用户账户</h2>
+            <p class="legal-text"><strong>普通用户：</strong>无需注册即可浏览和提交内容</p>
+            <p class="legal-text"><strong>管理员账户：</strong>由平台分配，用于管理内容和审核提交</p>
+            <p class="legal-text"><strong>账户安全：</strong>您有责任保管好账户凭证，对账户下的所有活动负责</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">四、用户行为规范</h2>
+            <p class="legal-text">使用本服务时，您同意：</p>
+            <ul class="legal-text">
+                <li>不提交违法、淫秽、诽谤或侵犯他人权利的内容</li>
+                <li>不提交恶意软件、钓鱼网站或有害链接</li>
+                <li>不试图破坏服务的安全性、完整性或可用性</li>
+                <li>不侵犯他人的知识产权</li>
+                <li>不进行任何商业广告宣传</li>
+                <li>遵守所有适用的法律和法规</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">五、内容提交与审核</h2>
+            <p class="legal-text"><strong>审核机制：</strong>所有用户提交的内容都需经过管理员审核</p>
+            <p class="legal-text"><strong>审核标准：</strong>基于内容质量、相关性、安全性等因素</p>
+            <p class="legal-text"><strong>保留权利：</strong>我们有权拒绝、编辑或删除任何不符合标准的内容</p>
+            <p class="legal-text"><strong>内容授权：</strong>提交内容即授权我们在服务中展示、修改、分发</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">六、知识产权</h2>
+            <p class="legal-text"><strong>平台内容：</strong>本服务的界面、设计、代码、商标归我们所有</p>
+            <p class="legal-text"><strong>用户内容：</strong>您保留对提交内容的版权，但授予我们展示权</p>
+            <p class="legal-text"><strong>第三方内容：</strong>我们展示的网站链接指向第三方内容，其知识产权归各自所有者</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">七、服务可用性与变更</h2>
+            <p class="legal-text">我们尽力提供可靠的服务，但：</p>
+            <ul class="legal-text">
+                <li>可能因维护、升级或其他原因暂时中断服务</li>
+                <li>可能更改、暂停或终止部分或全部服务</li>
+                <li>不保证服务的连续性或无错误运行</li>
+                <li>可能修改服务条款，继续使用视为接受修改</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">八、免责声明</h2>
+            <p class="legal-text">本服务按"现状"提供，不作任何明示或暗示的保证，包括但不限于：</p>
+            <ul class="legal-text">
+                <li>服务的适用性、准确性、可靠性</li>
+                <li>通过本服务访问的第三方网站内容</li>
+                <li>用户提交内容的真实性、准确性、合法性</li>
+                <li>服务不会中断、及时、安全或无错误</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">九、责任限制</h2>
+            <p class="legal-text">在任何情况下，我们对以下情况不承担责任：</p>
+            <ul class="legal-text">
+                <li>间接、附带、特殊、惩罚性或后果性损害</li>
+                <li>数据丢失、业务中断或利润损失</li>
+                <li>因使用或无法使用服务导致的任何损害</li>
+                <li>通过本服务访问的第三方网站造成的任何损害</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">十、终止条款</h2>
+            <p class="legal-text">我们有权在以下情况下终止或暂停您的访问：</p>
+            <ul class="legal-text">
+                <li>违反本服务条款</li>
+                <li>法律要求</li>
+                <li>长期不活动</li>
+                <li>保护服务安全或完整性</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2 class="legal-subtitle">十一、一般条款</h2>
+            <p class="legal-text"><strong>管辖法律：</strong>受中华人民共和国法律管辖</p>
+            <p class="legal-text"><strong>争议解决：</strong>通过友好协商解决，协商不成提交有管辖权的法院</p>
+            <p class="legal-text"><strong>条款可分割性：</strong>如某条款无效，不影响其他条款效力</p>
+            <p class="legal-text"><strong>联系方式：</strong>如有疑问，请通过网站联系管理员</p>
+        </div>
+        
+        <div class="legal-section">
+            <p class="legal-text"><em>最后更新日期：<span id="currentDate"></span></em></p>
+            <p class="legal-text">继续使用本服务，即表示您已阅读、理解并同意受这些服务条款的约束。</p>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            initLanguage();
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN');
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

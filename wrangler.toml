@@ -1,0 +1,18 @@
+name = "nav2"
+compatibility_date = "2026-02-20"
+main = "worker.js"
+workers_dev = true
+
+
+[[d1_databases]]
+binding = "NAV_DB"
+database_name = "nav-database"
+database_id = "5f8ac88d-68d7-4c22-a220-83f3d2a4908a"
+
+
+[[kv_namespaces]]
+binding = "NAV_AUTH"
+id = "32f4894fa7494017a368222ad8074bbb"
+
+[vars]
+ENABLE_PUBLIC_SUBMISSION = "true"

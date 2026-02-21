@@ -1,0 +1,356 @@
+/* 全局重置 & 基础样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* 深色科技风基础变量 */
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-primary: #38bdf8;
+  --accent-secondary: #818cf8;
+  --border-primary: #2a3756;
+  --shadow-primary: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  --transition-default: all 0.3s ease;
+}
+
+/* RTL语言适配 */
+.rtl {
+  direction: rtl;
+}
+
+/* 基础布局 */
+html, body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* 导航栏样式 */
+.navbar {
+  background-color: var(--bg-secondary);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-primary);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow-primary);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition-default);
+}
+
+.nav-link:hover {
+  color: var(--accent-primary);
+}
+
+.lang-select {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.lang-select:hover {
+  border-color: var(--accent-primary);
+}
+
+/* 移动端导航适配 */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    position: fixed;
+    top: 70px;
+    left: -100%;
+    flex-direction: column;
+    background-color: var(--bg-secondary);
+    width: 100%;
+    height: calc(100vh - 70px);
+    padding: 2rem;
+    transition: var(--transition-default);
+    border-top: 1px solid var(--border-primary);
+  }
+
+  .nav-menu.active {
+    left: 0;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+}
+
+/* 卡片样式（通用） */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.card {
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+  transition: var(--transition-default);
+  box-shadow: var(--shadow-primary);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-primary);
+}
+
+.card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background-color: var(--bg-tertiary);
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--accent-primary);
+}
+
+.card-desc {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.card-btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: var(--accent-primary);
+  color: var(--bg-primary);
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: var(--transition-default);
+  border: none;
+  cursor: pointer;
+}
+
+.card-btn:hover {
+  background-color: var(--accent-secondary);
+}
+
+/* 下载按钮（娱乐页专用） */
+.download-btn {
+  background-color: var(--accent-secondary);
+  margin-left: 0.5rem;
+}
+
+/* 分类标题 */
+.category-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 0.5rem;
+}
+
+/* 热门推荐滚动样式 */
+.hot-recommend {
+  margin: 3rem 0;
+}
+
+.scroll-container {
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.scroll-grid {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+}
+
+.scroll-card {
+  min-width: 300px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+  transition: var(--transition-default);
+}
+
+.scroll-card:hover {
+  transform: scale(1.02);
+  border-color: var(--accent-primary);
+}
+
+/* 页脚样式 */
+.footer {
+  background-color: var(--bg-secondary);
+  padding: 3rem 0;
+  margin-top: 4rem;
+  border-top: 1px solid var(--border-primary);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--accent-primary);
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition-default);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.footer-link:hover {
+  color: var(--accent-primary);
+}
+
+.copyright-text {
+  text-align: center;
+  color: var(--text-secondary);
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-primary);
+}
+
+/* 页面通用样式 */
+.page-header {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 2rem 0;
+  color: var(--accent-primary);
+  text-align: center;
+}
+
+.page-content {
+  padding: 2rem 0;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .page-header {
+    font-size: 2rem;
+  }
+
+  .category-title {
+    font-size: 1.5rem;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scroll-card {
+    min-width: 280px;
+  }
+}
+
+/* AdSense 合规样式（避免内容遮挡） */
+.adsense-container {
+  margin: 2rem auto;
+  text-align: center;
+  width: 100%;
+  max-width: 728px;
+}
+
+/* 隐私/版权/免责声明页面样式 */
+.legal-page {
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+.legal-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent-primary);
+}
+
+.legal-section {
+  margin-bottom: 1.5rem;
+}
+
+.legal-subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  color: var(--text-primary);
+}
+
+.legal-text {
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
