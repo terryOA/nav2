@@ -2980,75 +2980,826 @@ async function getDisclaimerPage() {
 // 找到handleRequest函数，在函数的开头部分添加：
 
 async function handleRequest(request, env, ctx) {
+  // ==================== 完整的 worker.js 文件 ====================
+// 书签导航系统 - Cloudflare Worker 版本
+// 最后更新：2024-02-21
+
+// 主请求处理函数
+async function handleRequest(request, env, ctx) {
   const url = new URL(request.url);
   const path = url.pathname;
+  const method = request.method;
   
-  // ==================== 新增：页面路由处理 ====================
-  // 处理主页
-  if (path === '/' || path === '/index.html') {
-    const html = await getIndexPage();
-    return new Response(html, {
-      headers: { 'Content-Type': 'text/html; charset=utf-8' }
+  // 设置 CORS 头部
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+  };
+  
+  // 处理 OPTIONS 请求（预检请求）
+  if (method === 'OPTIONS') {
+    return new Response(null, {
+      headers: corsHeaders
     });
   }
   
-  // 处理隐私政策页面
-  if (path === '/privacy' || path === '/privacy.html') {
-    const html = await getPrivacyPage();
-    return new Response(html, {
-      headers: { 'Content-Type': 'text/html; charset=utf-8' }
+  // 路由处理
+  try {
+    // 主页路由
+    if (path === '/' || path === '/index.html') {
+      return renderIndexPage();
+    }
+    
+    // 静态资源路由
+    if (path === '/styles.css') {
+      return new Response(getStylesCSS(), {
+        headers: { 
+          'Content-Type': 'text/css; charset=utf-8',
+          ...corsHeaders 
+        }
+      });
+    }
+    
+    if (path === '/i18n.js') {
+      return new Response(getI18nJS(), {
+        headers: { 
+          'Content-Type': 'application/javascript; charset=utf-8',
+          ...corsHeaders 
+        }
+      });
+    }
+    
+    if (path === '/script.js') {
+      return new Response(getScriptJS(), {
+        headers: { 
+          'Content-Type': 'application/javascript; charset=utf-8',
+          ...corsHeaders 
+        }
+      });
+    }
+    
+    // API 路由
+    if (path.startsWith('/api/')) {
+      return handleAPI(request, env, ctx, path, method, url);
+    }
+    
+    // 管理后台路由
+    if (path === '/admin') {
+      return renderAdminPage();
+    }
+    
+    // 法律页面路由
+    if (path === '/privacy' || path === '/privacy.html') {
+      return renderPrivacyPage();
+    }
+    
+    if (path === '/terms' || path === '/terms.html') {
+      return renderTermsPage();
+    }
+    
+    if (path === '/disclaimer' || path === '/disclaimer.html') {
+      return renderDisclaimerPage();
+    }
+    
+    // 默认返回 404
+    return new Response('页面未找到', { 
+      status: 404,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
+    
+  } catch (error) {
+    console.error('处理请求时出错:', error);
+    return new Response('服务器内部错误', { 
+      status: 500,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
     });
   }
-  
-  // 处理服务条款页面
-  if (path === '/terms' || path === '/terms.html') {
-    const html = await getTermsPage();
-    return new Response(html, {
-      headers: { 'Content-Type': 'text/html; charset=utf-8' }
-    });
-  }
-  
-  // 处理免责声明页面
-  if (path === '/disclaimer' || path === '/disclaimer.html') {
-    const html = await getDisclaimerPage();
-    return new Response(html, {
-      headers: { 'Content-Type': 'text/html; charset=utf-8' }
-    });
-  }
-  
-  // 处理CSS文件
-  if (path === '/styles.css') {
-    // 这里应该返回styles.css的内容
-    // 为了简化，我们返回一个基本样式
-    const css = `body { font-family: Arial; margin: 0; padding: 20px; }`;
-    return new Response(css, {
-      headers: { 'Content-Type': 'text/css' }
-    });
-  }
-  
-  // 处理JavaScript文件
-  if (path === '/i18n.js' || path === '/script.js') {
-    // 返回一个空的JavaScript文件
-    return new Response('// JavaScript文件', {
-      headers: { 'Content-Type': 'application/javascript' }
-    });
-  }
-  
-  // ==================== 原有代码继续 ====================
-  // ... 原有的API处理代码 ...
-// ==================== 新增代码结束 ====================
-// 导出主模块
-export default {
-async function handleRequest(request, env, ctx) {
-  // ... 您的处理逻辑 ...
 }
 
-// 使用 addEventListener 格式（这是原始格式）
+// ==================== API 处理函数 ====================
+async function handleAPI(request, env, ctx, path, method, url) {
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+  };
+  
+  // 获取网站配置
+  if (path === '/api/config' && method === 'GET') {
+    try {
+      const page = parseInt(url.searchParams.get('page') || '1');
+      const pageSize = parseInt(url.searchParams.get('pageSize') || '20');
+      const catalog = url.searchParams.get('catalog');
+      
+      let query = 'SELECT * FROM sites WHERE 1=1';
+      const params = [];
+      
+      if (catalog) {
+        query += ' AND catelog = ?';
+        params.push(catalog);
+      }
+      
+      query += ' ORDER BY sort_order ASC, id DESC LIMIT ? OFFSET ?';
+      params.push(pageSize, (page - 1) * pageSize);
+      
+      const result = await env.NAV_DB.prepare(query).bind(...params).all();
+      
+      return new Response(JSON.stringify({
+        code: 200,
+        message: 'success',
+        data: result.results || [],
+        total: result.results ? result.results.length : 0,
+        page: page,
+        pageSize: pageSize
+      }), {
+        headers: { 
+          'Content-Type': 'application/json; charset=utf-8',
+          ...corsHeaders 
+        }
+      });
+    } catch (error) {
+      return new Response(JSON.stringify({
+        code: 500,
+        message: '数据库查询失败: ' + error.message,
+        data: []
+      }), {
+        headers: { 
+          'Content-Type': 'application/json; charset=utf-8',
+          ...corsHeaders 
+        }
+      });
+    }
+  }
+  
+  // 提交新网站（公开提交）
+  if (path === '/api/config/submit' && method === 'POST') {
+    try {
+      const body = await request.json();
+      
+      // 验证必要字段
+      if (!body.name || !body.url || !body.catelog) {
+        return new Response(JSON.stringify({
+          code: 400,
+          message: '缺少必要字段: name, url, catelog'
+        }), {
+          headers: { 
+            'Content-Type': 'application/json; charset=utf-8',
+            ...corsHeaders 
+          }
+        });
+      }
+      
+      // 插入到待审核表
+      const result = await env.NAV_DB.prepare(
+        'INSERT INTO pending_sites (name, url, logo, desc, catelog) VALUES (?, ?, ?, ?, ?)'
+      ).bind(
+        body.name,
+        body.url,
+        body.logo || null,
+        body.desc || null,
+        body.catelog
+      ).run();
+      
+      return new Response(JSON.stringify({
+        code: 201,
+        message: '提交成功，等待管理员审核',
+        data: { id: result.meta.last_row_id }
+      }), {
+        headers: { 
+          'Content-Type': 'application/json; charset=utf-8',
+          ...corsHeaders 
+        }
+      });
+      
+    } catch (error) {
+      return new Response(JSON.stringify({
+        code: 500,
+        message: '提交失败: ' + error.message
+      }), {
+        headers: { 
+          'Content-Type': 'application/json; charset=utf-8',
+          ...corsHeaders 
+        }
+      });
+    }
+  }
+  
+  // 其他 API 返回未实现
+  return new Response(JSON.stringify({
+    code: 404,
+    message: 'API 不存在'
+  }), {
+    status: 404,
+    headers: { 
+      'Content-Type': 'application/json; charset=utf-8',
+      ...corsHeaders 
+    }
+  });
+}
+
+// ==================== 页面渲染函数 ====================
+function renderIndexPage() {
+  const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>书签导航 - 发现优质网站</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/i18n.js" defer></script>
+    <script src="/script.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="logo" data-i18n="nav.home">首页</a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#short-drama" class="nav-link" data-i18n="nav.shortDrama">短剧</a></li>
+                <li><a href="#tools" class="nav-link" data-i18n="nav.tools">工具</a></li>
+                <li><a href="#entertainment" class="nav-link" data-i18n="nav.entertainment">娱乐</a></li>
+                <li><a href="#blog" class="nav-link" data-i18n="nav.blog">博客</a></li>
+                <li><a href="/admin" class="nav-link">管理后台</a></li>
+            </ul>
+            <div class="nav-right">
+                <select id="language-select" class="lang-select" onchange="changeLang(this.value)">
+                    <option value="en">English</option>
+                    <option value="zh" selected>中文</option>
+                </select>
+                <a href="/privacy" class="legal-link" data-i18n="nav.privacy">隐私政策</a>
+            </div>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section class="hero-section">
+            <h1 class="hero-title">书签导航</h1>
+            <p class="hero-subtitle">发现、分享、收藏优质网站资源</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="total-sites">0</span>
+                    <span class="stat-label">收录网站</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">语言支持</span>
+                </div>
+            </div>
+        </section>
+        
+        <section class="content-section">
+            <h2 class="section-title" data-i18n="home.hotRecommend">热门推荐</h2>
+            <div class="card-grid" id="hot-sites">
+                <div class="loading-spinner">正在加载网站数据...</div>
+            </div>
+        </section>
+        
+        <section class="content-section" id="submit-section">
+            <h2 class="section-title">提交新网站</h2>
+            <div class="submit-form">
+                <input type="text" id="site-name" placeholder="网站名称" required>
+                <input type="url" id="site-url" placeholder="https://example.com" required>
+                <textarea id="site-desc" placeholder="网站描述" rows="3"></textarea>
+                <select id="site-category" required>
+                    <option value="">选择分类</option>
+                    <option value="短剧">短剧</option>
+                    <option value="工具">工具</option>
+                    <option value="娱乐">娱乐</option>
+                </select>
+                <button id="submit-site" class="submit-btn">提交书签</button>
+                <p class="form-hint">提交后需要管理员审核</p>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="/privacy" class="footer-link">隐私政策</a>
+            <a href="/terms" class="footer-link">服务条款</a>
+            <a href="/disclaimer" class="footer-link">免责声明</a>
+        </div>
+        <p class="copyright">&copy; 2024 书签导航</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载网站数据
+            fetch('/api/config?page=1&pageSize=6')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200) {
+                        const container = document.getElementById('hot-sites');
+                        container.innerHTML = '';
+                        data.data.forEach(site => {
+                            const card = document.createElement('div');
+                            card.className = 'card';
+                            card.innerHTML = \`
+                                <div class="card-img">\${site.name.charAt(0)}</div>
+                                <div class="card-content">
+                                    <h3>\${site.name}</h3>
+                                    <p>\${site.desc || '暂无描述'}</p>
+                                    <a href="\${site.url}" target="_blank">访问网站</a>
+                                </div>
+                            \`;
+                            container.appendChild(card);
+                        });
+                        document.getElementById('total-sites').textContent = data.total;
+                    }
+                });
+            
+            // 提交功能
+            document.getElementById('submit-site').addEventListener('click', function() {
+                const name = document.getElementById('site-name').value;
+                const url = document.getElementById('site-url').value;
+                const desc = document.getElementById('site-desc').value;
+                const category = document.getElementById('site-category').value;
+                
+                if (!name || !url || !category) {
+                    alert('请填写网站名称、网址和分类');
+                    return;
+                }
+                
+                fetch('/api/config/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, url, desc, catelog: category })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message);
+                    if (result.code === 201) {
+                        document.getElementById('site-name').value = '';
+                        document.getElementById('site-url').value = '';
+                        document.getElementById('site-desc').value = '';
+                        document.getElementById('site-category').value = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>`;
+  
+  return new Response(html, {
+    headers: { 
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-cache'
+    }
+  });
+}
+
+function renderAdminPage() {
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>管理员登录 - 书签导航</title>
+    <style>
+        body { font-family: Arial; max-width: 400px; margin: 100px auto; padding: 20px; }
+        h1 { text-align: center; }
+        .login-form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>管理员登录</h1>
+    <div class="login-form">
+        <input type="text" id="username" placeholder="用户名">
+        <input type="password" id="password" placeholder="密码">
+        <button onclick="login()">登录</button>
+    </div>
+    <p style="text-align: center; margin-top: 20px; color: #666;">
+        默认账号：admin / admin
+    </p>
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'admin' && password === 'admin') {
+                alert('登录成功！管理功能正在开发中...');
+            } else {
+                alert('用户名或密码错误');
+            }
+        }
+    </script>
+</body>
+</html>`;
+  
+  return new Response(html, {
+    headers: { 'Content-Type': 'text/html; charset=utf-8' }
+  });
+}
+
+function renderPrivacyPage() {
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>隐私政策 - 书签导航</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        h1 { color: #333; }
+        h2 { color: #555; margin-top: 30px; }
+        p { color: #666; }
+    </style>
+</head>
+<body>
+    <h1>隐私政策</h1>
+    <p>最后更新：2024年2月21日</p>
+    
+    <h2>1. 信息收集</h2>
+    <p>我们收集用户提交的网站信息，包括网站名称、URL、描述和分类。</p>
+    
+    <h2>2. 信息使用</h2>
+    <p>收集的信息用于：</p>
+    <ul>
+        <li>展示在书签导航网站上</li>
+        <li>改进网站功能</li>
+        <li>防止滥用行为</li>
+    </ul>
+    
+    <h2>3. 数据存储</h2>
+    <p>数据存储在Cloudflare D1数据库中，采用行业标准的安全措施。</p>
+    
+    <h2>4. 联系我们</h2>
+    <p>如有疑问，请通过网站反馈功能联系我们。</p>
+</body>
+</html>`;
+  
+  return new Response(html, {
+    headers: { 'Content-Type': 'text/html; charset=utf-8' }
+  });
+}
+
+function renderTermsPage() {
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>服务条款 - 书签导航</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        h1 { color: #333; }
+        h2 { color: #555; margin-top: 30px; }
+        p { color: #666; }
+    </style>
+</head>
+<body>
+    <h1>服务条款</h1>
+    <p>最后更新：2024年2月21日</p>
+    
+    <h2>1. 接受条款</h2>
+    <p>使用本服务即表示您同意这些条款。</p>
+    
+    <h2>2. 服务说明</h2>
+    <p>本服务提供书签导航功能，用户可以浏览和提交网站链接。</p>
+    
+    <h2>3. 用户责任</h2>
+    <p>用户应确保提交的内容合法、合规，不侵犯第三方权益。</p>
+    
+    <h2>4. 免责声明</h2>
+    <p>本服务不对第三方网站的内容负责。</p>
+</body>
+</html>`;
+  
+  return new Response(html, {
+    headers: { 'Content-Type': 'text/html; charset=utf-8' }
+  });
+}
+
+function renderDisclaimerPage() {
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>免责声明 - 书签导航</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        h1 { color: #333; }
+        h2 { color: #555; margin-top: 30px; }
+        p { color: #666; }
+    </style>
+</head>
+<body>
+    <h1>免责声明</h1>
+    
+    <h2>重要声明</h2>
+    <p>本网站仅提供网站链接导航服务，不对第三方网站的内容负责。</p>
+    
+    <h2>第三方链接</h2>
+    <p>所有展示的网站链接指向第三方独立运营的网站。</p>
+    <p>点击外部链接时，您需自行评估目标网站的风险。</p>
+    
+    <h2>内容准确性</h2>
+    <p>我们尽力审核用户提交的内容，但无法保证100%准确。</p>
+    
+    <h2>责任限制</h2>
+    <p>在法律允许的范围内，我们对因使用本服务造成的任何损害不承担责任。</p>
+</body>
+</html>`;
+  
+  return new Response(html, {
+    headers: { 'Content-Type': 'text/html; charset=utf-8' }
+  });
+}
+
+// ==================== 静态资源函数 ====================
+function getStylesCSS() {
+  return `/* 基础样式 */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 导航栏 */
+.navbar {
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 1rem 0;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-left: 2rem;
+}
+
+.nav-link {
+  padding: 0.5rem 1rem;
+  color: #555;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: #007bff;
+}
+
+.nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* 卡片网格 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-img {
+  height: 150px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 3rem;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-content h3 {
+  margin: 0 0 10px 0;
+}
+
+.card-content p {
+  color: #666;
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+}
+
+/* 提交表单 */
+.submit-form {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.submit-form input,
+.submit-form textarea,
+.submit-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.submit-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.submit-btn:hover {
+  background: #0056b3;
+}
+
+/* 页脚 */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  margin-top: 3rem;
+  color: #666;
+  border-top: 1px solid #eee;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.footer-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-wrap: wrap;
+  }
+  
+  .nav-menu {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    margin: 1rem 0 0 0;
+  }
+  
+  .nav-menu.show {
+    display: flex;
+  }
+  
+  .nav-right {
+    display: none;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+}`;
+}
+
+function getI18nJS() {
+  return `// 多语言配置文件
+const translations = {
+  en: {
+    nav: {
+      home: "Home",
+      shortDrama: "Short Drama",
+      tools: "Tools",
+      entertainment: "Entertainment",
+      blog: "Blog",
+      privacy: "Privacy Policy",
+      disclaimer: "Disclaimer"
+    },
+    home: {
+      hotRecommend: "Hot Recommendations"
+    }
+  },
+  zh: {
+    nav: {
+      home: "首页",
+      shortDrama: "短剧",
+      tools: "工具",
+      entertainment: "娱乐",
+      blog: "博客",
+      privacy: "隐私政策",
+      disclaimer: "免责声明"
+    },
+    home: {
+      hotRecommend: "热门推荐"
+    }
+  }
+};
+
+let currentLang = "zh";
+
+function initLanguage() {
+  const savedLang = localStorage.getItem("website_lang");
+  if (savedLang && translations[savedLang]) {
+    currentLang = savedLang;
+  }
+  const langSelect = document.getElementById("language-select");
+  if (langSelect) {
+    langSelect.value = currentLang;
+  }
+  updateContent();
+}
+
+function updateContent() {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    const keys = key.split(".");
+    let value = translations[currentLang];
+    for (const k of keys) {
+      value = value?.[k];
+    }
+    if (value !== undefined) {
+      el.textContent = value;
+    }
+  });
+}
+
+function changeLang(lang) {
+  if (!translations[lang]) return;
+  localStorage.setItem("website_lang", lang);
+  currentLang = lang;
+  updateContent();
+}
+
+document.addEventListener("DOMContentLoaded", initLanguage);`;
+}
+
+function getScriptJS() {
+  return `// 前端脚本文件
+document.addEventListener('DOMContentLoaded', function() {
+  // 移动端菜单切换
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const navMenu = document.getElementById('nav-menu');
+  
+  if (menuBtn && navMenu) {
+    menuBtn.addEventListener('click', function() {
+      navMenu.classList.toggle('show');
+    });
+  }
+  
+  // 点击外部关闭菜单
+  document.addEventListener('click', function(event) {
+    if (navMenu && navMenu.classList.contains('show')) {
+      if (!navMenu.contains(event.target) && event.target !== menuBtn) {
+        navMenu.classList.remove('show');
+      }
+    }
+  });
+});`;
+}
+
+// ==================== Worker 入口点 ====================
+// 注意：这里只使用一种导出格式
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request, {
-    // 您的环境绑定
-    NAV_DB: env.NAV_DB,
-    NAV_AUTH: env.NAV_AUTH,
-    ENABLE_PUBLIC_SUBMISSION: env.ENABLE_PUBLIC_SUBMISSION
+    NAV_DB: {},  // 这些将由Cloudflare Workers运行时注入
+    NAV_AUTH: {},
+    ENABLE_PUBLIC_SUBMISSION: "true"
   }, event));
 });
