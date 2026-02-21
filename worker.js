@@ -3039,15 +3039,16 @@ async function handleRequest(request, env, ctx) {
 // ==================== 新增代码结束 ====================
 // 导出主模块
 export default {
-async fetch(request, env, ctx) {
-  const url = new URL(request.url);
-  
-  if (url.pathname.startsWith('/api')) {
-    return api.handleRequest(request, env, ctx);
-  } else if (url.pathname === '/admin' || url.pathname.startsWith('/static')) {
-    return admin.handleRequest(request, env, ctx);
-  } else {
-    return handleRequest(request, env, ctx);
-  }
-},
-};
+async function handleRequest(request, env, ctx) {
+  // ... 您的处理逻辑 ...
+}
+
+// 使用 addEventListener 格式（这是原始格式）
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request, {
+    // 您的环境绑定
+    NAV_DB: env.NAV_DB,
+    NAV_AUTH: env.NAV_AUTH,
+    ENABLE_PUBLIC_SUBMISSION: env.ENABLE_PUBLIC_SUBMISSION
+  }, event));
+});
